@@ -1,3 +1,6 @@
+import { gt } from 'lodash';
+const {allPass, anyPass, compose, curry, equals, filter, not, partial, partialRight, prop} = require('ramda');
+
 /**
  * @file Домашка по FP ч. 1
  * 
@@ -13,38 +16,225 @@
  * Если какие либо функции написаны руками (без использования библиотек) это не является ошибкой
  */
 
-// 1. Красная звезда, зеленый квадрат, все остальные белые.
-export const validateFieldN1 = ({star, square, triangle, circle}) => {
-    if (triangle !== 'white' || circle !== 'white') {
-        return false;
-    }
+//Functions that get an object field
+const getStar = prop('star');
+const getSquare = prop('square');
+const getTriangle = prop('triangle');
+const getCircle = prop('circle');
+const getLength = prop('length');
+//May be this function should be changed for compose()
+const getAllFiguresColors = (figuresObject) => Object.values(figuresObject);
 
-    return star === 'red' && square === 'green';
-};
+//Functions that check figures color
+const isFigureWhite = equals('white');
+const isFigureRed = equals('red');
+const isFigureGreen = equals('green');
+const isFigureBlue = equals('blue');
+const isFigureOrange = equals('orange');
+ 
+const isFigureNotWhite = compose(
+    not, 
+    isFigureWhite,
+);
+const isFigureNotRed = compose(
+    not, 
+    isFigureRed,
+);
+const isFigureNotBlue = compose(
+    not, 
+    isFigureBlue,
+);
 
-// 2. Как минимум две фигуры зеленые.
-export const validateFieldN2 = () => false;
+//Functions that check color of specific figure
+const isStarWhite = compose(
+    isFigureWhite,
+    getStar
+);
+const isStarRed = compose(
+    isFigureRed,
+    getStar
+);
+const isStarGreen = compose(
+    isFigureGreen,
+    getStar
+);
+const isStarBlue = compose(
+    isFigureBlue,
+    getStar
+);
+const isStarOrange = compose(
+    isFigureOrange,
+    getStar
+);
 
-// 3. Количество красных фигур равно кол-ву синих.
-export const validateFieldN3 = () => false;
+const isSquareWhite = compose(
+    isFigureWhite,
+    getSquare
+)
+const isSquareRed = compose(
+    isFigureRed,
+    getSquare
+);
+const isSquareGreen = compose(
+    isFigureGreen,
+    getSquare
+);
+const isSquareBlue = compose(
+    isFigureBlue,
+    getSquare
+);
+const isSquareOrange = compose(
+    isFigureOrange,
+    getSquare
+);
 
-// 4. Синий круг, красная звезда, оранжевый квадрат
-export const validateFieldN4 = () => false;
+const isTriangleWhite = compose(
+    isFigureWhite,
+    getTriangle
+);
+const isTriangleRed = compose(
+    isFigureRed,
+    getTriangle
+);
+const isTriangleGreen = compose(
+    isFigureGreen,
+    getTriangle
+);
+const isTriangleBlue = compose(
+    isFigureBlue,
+    getTriangle
+);
+const isTriangleOrange = compose(
+    isFigureOrange,
+    getTriangle
+);
 
-// 5. Три фигуры одного любого цвета кроме белого (четыре фигуры одного цвета – это тоже true).
-export const validateFieldN5 = () => false;
+const isCircleWhite = compose(
+    isFigureWhite,
+    getCircle
+)
+const isCircleRed = compose(
+    isFigureRed,
+    getCircle
+);
+const isCircleGreen = compose(
+    isFigureGreen,
+    getCircle
+);
+const isCircleBlue = compose(
+    isFigureBlue,
+    getCircle
+);
+const isCircleOrange = compose(
+    isFigureOrange,
+    getCircle
+);
 
-// 6. Две зеленые фигуры (одна из них треугольник), еще одна любая красная.
-export const validateFieldN6 = () => false;
+//Function for counting colors of figures
+const countFiguresColor = (color) => compose(
+    getLength,
+    filter(color),
+    getAllFiguresColors
+);
 
-// 7. Все фигуры оранжевые.
-export const validateFieldN7 = () => false;
+//Functions that count specific color figures
+const getWhiteFiguresCount = countFiguresColor(isFigureWhite);
+const getRedFiguresCount = countFiguresColor(isFigureRed);
+const getGreenFiguresCount = countFiguresColor(isFigureGreen);
+const getBlueFiguresCount = countFiguresColor(isFigureBlue);
+const getOrangeFiguresCount = countFiguresColor(isFigureOrange);
 
-// 8. Не красная и не белая звезда.
-export const validateFieldN8 = () => false;
+//Functions that compare count if figures
+const isMoreThanOne = (count) => gt(count, 1);
+const isMoreThanTwo = (count) => gt(count, 2);
 
-// 9. Все фигуры зеленые.
-export const validateFieldN9 = () => false;
+const isRedFiguresMoreThanTwo = compose(
+    isMoreThanTwo,
+    getRedFiguresCount
+);
+const isGreenFiguresMoreThanTwo = compose(
+    isMoreThanTwo,
+    getGreenFiguresCount
+);
+const isBlueFiguresMoreThanTwo = compose(
+    isMoreThanTwo,
+    getBlueFiguresCount
+);
+const isOrangeFiguresMoreThanTwo = compose(
+    isMoreThanTwo,
+    getOrangeFiguresCount
+);
+const isSquareTriangleEqualColor = (figureObject) => equals(getSquare(figureObject), getTriangle(figureObject));
 
-// 10. Треугольник и квадрат одного цвета (не белого)
-export const validateFieldN10 = () => false;
+//Specific functions
+const isTriangleCircleWhite = allPass([isTriangleWhite, isCircleWhite]);
+const isStarRedSquareGreen = allPass([isStarRed, isSquareGreen]);
+const isStarNotWhite = compose(
+    isFigureNotWhite,
+    getStar
+);
+const isStarNotRed = compose(
+    isFigureNotRed,
+    getStar
+);
+const isSquareNotWhite = compose(
+    isFigureNotWhite,
+    getSquare
+);
+const isTriangleNotWhite = compose(
+    isFigureNotWhite,
+    getTriangle
+);
+const isTwoGreenFigures = compose(
+    equals(2),
+    getGreenFiguresCount
+);
+const isOneRedFigure = compose(
+    equals(1),
+    getRedFiguresCount
+);
+
+//Result validate functions
+const isRedStarGreenSquareAnotherWhite = allPass([isStarRedSquareGreen(), isTriangleCircleWhite()]);
+const isMinTwoFiguresGreen = compose(
+    isMoreThanOne,
+    getGreenFiguresCount
+);
+const isEqualRedBlueFigures = (figuresObject) => equals(getRedFiguresCount(figuresObject), getBlueFiguresCount(figuresObject));
+const isBlueCircleRedStarOrangeSquare = allPass([isCircleBlue, isStarRed, isSquareOrange]);
+const isThreeFiguresSameColorNotWhite = anyPass([isRedFiguresMoreThanTwo, isGreenFiguresMoreThanTwo, isBlueFiguresMoreThanTwo, isOrangeFiguresMoreThanTwo]);
+const isTriangleAndAnotherGreenOneRed = allPass([isTwoGreenFigures, isTriangleGreen, isOneRedFigure]);
+const isAllFiguresOrange = allPass([isStarOrange, isSquareOrange, isTriangleOrange, isCircleOrange]);
+const isStarNotWhiteNotRed = allPass([isStarNotWhite, isStarNotRed]);
+const isAllFiguresGreen = allPass([isStarGreen, isSquareGreen, isTriangleGreen, isCircleGreen]);
+const isTriangleSquareSameColorNotWhite = allPass([isTriangleNotWhite, isSquareNotWhite, isSquareTriangleEqualColor]);
+
+// 1. Red star, green square, all another - white.
+export const validateFieldN1 = isRedStarGreenSquareAnotherWhite();
+
+// 2. At least two figures green.
+export const validateFieldN2 = isMinTwoFiguresGreen;
+
+// 3. Count of red figures should be equal to count of blue.
+export const validateFieldN3 = (figuresObject) => isEqualRedBlueFigures(figuresObject);
+
+// 4. Blue circle, red star, orange square.
+export const validateFieldN4 = isBlueCircleRedStarOrangeSquare();
+
+// 5. Three figures have the same color other than white (four figures of the same color – it's also 'true').
+export const validateFieldN5 = isThreeFiguresSameColorNotWhite();
+
+// 6. Two green figures (one of them is triangle), and also one red figure.
+export const validateFieldN6 = isTriangleAndAnotherGreenOneRed();
+
+// 7. All figures are orange.
+export const validateFieldN7 = isAllFiguresOrange();
+
+// 8. The star is not white or red.
+export const validateFieldN8 = isStarNotWhiteNotRed();
+
+// 9. All figures are green.
+export const validateFieldN9 = isAllFiguresGreen();
+
+// 10. Triangle and square have the same color (not white).
+export const validateFieldN10 = isTriangleSquareSameColorNotWhite();
