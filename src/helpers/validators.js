@@ -1,5 +1,5 @@
 import { gt } from 'lodash';
-const {allPass, anyPass, compose, curry, equals, filter, not, partial, partialRight, prop} = require('ramda');
+const {allPass, anyPass, compose, equals, filter, not, prop} = require('ramda');
 
 /**
  * @file Домашка по FP ч. 1
@@ -22,7 +22,6 @@ const getSquare = prop('square');
 const getTriangle = prop('triangle');
 const getCircle = prop('circle');
 const getLength = prop('length');
-//May be this function should be changed for compose()
 const getAllFiguresColors = (figuresObject) => Object.values(figuresObject);
 
 //Functions that check figures color
@@ -40,16 +39,8 @@ const isFigureNotRed = compose(
     not, 
     isFigureRed,
 );
-const isFigureNotBlue = compose(
-    not, 
-    isFigureBlue,
-);
 
 //Functions that check color of specific figure
-const isStarWhite = compose(
-    isFigureWhite,
-    getStar
-);
 const isStarRed = compose(
     isFigureRed,
     getStar
@@ -58,29 +49,13 @@ const isStarGreen = compose(
     isFigureGreen,
     getStar
 );
-const isStarBlue = compose(
-    isFigureBlue,
-    getStar
-);
 const isStarOrange = compose(
     isFigureOrange,
     getStar
 );
 
-const isSquareWhite = compose(
-    isFigureWhite,
-    getSquare
-)
-const isSquareRed = compose(
-    isFigureRed,
-    getSquare
-);
 const isSquareGreen = compose(
     isFigureGreen,
-    getSquare
-);
-const isSquareBlue = compose(
-    isFigureBlue,
     getSquare
 );
 const isSquareOrange = compose(
@@ -92,16 +67,8 @@ const isTriangleWhite = compose(
     isFigureWhite,
     getTriangle
 );
-const isTriangleRed = compose(
-    isFigureRed,
-    getTriangle
-);
 const isTriangleGreen = compose(
     isFigureGreen,
-    getTriangle
-);
-const isTriangleBlue = compose(
-    isFigureBlue,
     getTriangle
 );
 const isTriangleOrange = compose(
@@ -111,10 +78,6 @@ const isTriangleOrange = compose(
 
 const isCircleWhite = compose(
     isFigureWhite,
-    getCircle
-)
-const isCircleRed = compose(
-    isFigureRed,
     getCircle
 );
 const isCircleGreen = compose(
@@ -138,7 +101,6 @@ const countFiguresColor = (color) => compose(
 );
 
 //Functions that count specific color figures
-const getWhiteFiguresCount = countFiguresColor(isFigureWhite);
 const getRedFiguresCount = countFiguresColor(isFigureRed);
 const getGreenFiguresCount = countFiguresColor(isFigureGreen);
 const getBlueFiguresCount = countFiguresColor(isFigureBlue);
